@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://cowr5cyiq8wto"]
+
+[ext_resource type="PackedScene" uid="uid://dlnbbnapa8r4p" path="res://scenes/bird.tscn" id="1_uafe7"]
+[ext_resource type="PackedScene" uid="uid://ce4aav6o1nydr" path="res://scenes/birds.tscn" id="2_5g0qc"]
+
+[node name="Game" type="Node2D"]
+
+[node name="Birds" parent="." instance=ExtResource("2_5g0qc")]
+bird_scene = ExtResource("1_uafe7")
