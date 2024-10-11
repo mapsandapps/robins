@@ -2,8 +2,11 @@ extends CharacterBody2D
 
 const SPEED = 0
 const JUMP_VELOCITY = 0
+const MIN_ROTATION = -1 # radians
+const MAX_ROTATION = 1
 
-const POSSIBLE_MOVES = ['hop', 'walk', 'turn']
+#const POSSIBLE_MOVES = ['hop', 'walk', 'turn']
+const POSSIBLE_MOVES = ['turn']
 
 # any of the possible bird movements
 func move():
@@ -27,6 +30,7 @@ func walk():
 
 func turn():
 	print('turn')
+	self.rotate(randf_range(MIN_ROTATION, MAX_ROTATION))
 
 func _physics_process(delta):
 	# Handle jump.

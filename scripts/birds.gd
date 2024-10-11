@@ -2,6 +2,10 @@ extends Node2D
 
 @export var bird_scene: PackedScene
 
+#const BIRD_SPRITE_SCALE = 0.25
+const BIRD_SPRITE_SCALE = 0.5
+const NUMBER_OF_BIRDS = 1
+
 const MIN_BIRD_TIMING = 0
 const MAX_BIRD_TIMING = 5
 
@@ -17,11 +21,13 @@ func get_random_position():
 
 func spawn_bird(pos: Vector2 = get_random_position()):
 	var bird = bird_scene.instantiate()
+	bird.scale.x = BIRD_SPRITE_SCALE
+	bird.scale.y = BIRD_SPRITE_SCALE
 	bird.position = pos
 	bird.rotation = randf_range(0, 2 * PI)
 	birds.append(bird)
 	add_child(bird)
-	
+
 # QUESTION: should this be in bird.gd?
 # no, but the move command should be
 func move_random_bird():
@@ -36,7 +42,7 @@ func move_random_bird():
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	for i in 10:
+	for i in NUMBER_OF_BIRDS:
 		spawn_bird()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
