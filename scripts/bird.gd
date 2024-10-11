@@ -8,8 +8,20 @@ const MAX_ROTATION = 1
 #const POSSIBLE_MOVES = ['hop', 'walk', 'turn']
 const POSSIBLE_MOVES = ['turn']
 
+var remaining_move_duration = 0 # seconds
+#var is_moving = remaining_move_duration > 0
+
+func get_is_moving():
+	return remaining_move_duration > 0
+
 # any of the possible bird movements
 func move():
+	print(remaining_move_duration)
+	# if the bird is already moving, don't move it
+	if get_is_moving():
+		print('tried to move but was already moving')
+		return
+	
 	# TODO: pick a movement
 	var move = POSSIBLE_MOVES.pick_random()
 	print(move)
@@ -29,8 +41,15 @@ func walk():
 	print('walk')
 
 func turn():
-	print('turn')
+	# TODO: animate
+	
+	# TODO: set this correctly
+	remaining_move_duration = 1
+
 	self.rotate(randf_range(MIN_ROTATION, MAX_ROTATION))
+
+func _process(delta):
+	remaining_move_duration = max(0, remaining_move_duration - delta)
 
 func _physics_process(delta):
 	# Handle jump.

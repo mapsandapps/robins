@@ -7,7 +7,7 @@ const BIRD_SPRITE_SCALE = 0.5
 const NUMBER_OF_BIRDS = 1
 
 const MIN_BIRD_TIMING = 0
-const MAX_BIRD_TIMING = 5
+const MAX_BIRD_TIMING = 2
 
 var birds: Array = []
 var click_position = Vector2()
