@@ -2,12 +2,13 @@ extends Node2D
 
 @export var bird_scene: PackedScene
 
-#const BIRD_SPRITE_SCALE = 0.25
-const BIRD_SPRITE_SCALE = 0.5
-const NUMBER_OF_BIRDS = 1
+const BORDER_SIZE = 100
+
+const BIRD_SPRITE_SCALE = 0.25
+const NUMBER_OF_BIRDS = 4
 
 const MIN_BIRD_TIMING = 0
-const MAX_BIRD_TIMING = 2
+const MAX_BIRD_TIMING = 1
 
 var birds: Array = []
 var click_position = Vector2()
@@ -23,7 +24,11 @@ func spawn_bird(pos: Vector2 = get_random_position()):
 	var bird = bird_scene.instantiate()
 	bird.scale.x = BIRD_SPRITE_SCALE
 	bird.scale.y = BIRD_SPRITE_SCALE
-	bird.position = pos
+
+	# only spawn inside fence
+	bird.position.x = clamp(pos.x, BORDER_SIZE, screenSize.x - BORDER_SIZE)
+	bird.position.y = clamp(pos.y, BORDER_SIZE, screenSize.y - BORDER_SIZE)
+
 	bird.rotation = randf_range(0, 2 * PI)
 	birds.append(bird)
 	add_child(bird)
