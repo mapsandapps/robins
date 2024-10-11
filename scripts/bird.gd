@@ -1,13 +1,21 @@
 extends CharacterBody2D
 
+# TODO: remove these
 const SPEED = 0
 const JUMP_VELOCITY = 0
+
+# turn
 const MIN_ROTATION = 0.1 # radians
 const MAX_ROTATION = 1 # radians
 const ROTATION_SPEED = 2 # radians / second
 
+# walk
+const MIN_WALK_DISTANCE = 10
+const MAX_WALK_DISTANCE = 100
+const WALK_SPEED = 100 # all robins walk at the same pace
+
 #const POSSIBLE_MOVES = ['hop', 'walk', 'turn']
-const POSSIBLE_MOVES = ['turn']
+const POSSIBLE_MOVES = ['turn', 'walk']
 
 var current_move: String = ''
 var remaining_move_duration = 0 # seconds
@@ -19,6 +27,8 @@ func get_is_moving():
 func on_move_ended():
 	remaining_move_duration = 0
 	current_move = ''
+	velocity.x = 0
+	velocity.y = 0
 
 # any of the possible bird movements
 func move():
@@ -36,15 +46,12 @@ func move():
 	if current_move == 'hop':
 		hop()
 	elif current_move == 'walk':
-		walk()
+		begin_walk()
 	elif current_move == 'turn':
 		begin_turn()
 
 func hop():
 	print('hop')
-
-func walk():
-	print('walk')
 
 func begin_turn():
 	# set the move duration, then delta will handle rotating for that amount of time
@@ -56,6 +63,14 @@ func begin_turn():
 
 	print("bird will turn ", rotation_radians * turn_direction, " radians")
 
+func begin_walk():
+	# set the walk duration, then delta will handle rotating for that amount of time
+	var walk_distance = randf_range(MIN_WALK_DISTANCE, MAX_WALK_DISTANCE)
+
+	remaining_move_duration = walk_distance / WALK_SPEED
+
+	print("bird will walk ", walk_distance, " units of distance")
+
 func _physics_process(delta):
 	if remaining_move_duration <= 0:
 		on_move_ended()
@@ -64,17 +79,9 @@ func _physics_process(delta):
 	if current_move == 'turn':
 		self.rotate(turn_direction * delta * ROTATION_SPEED)
 
-	# Handle jump.
-	if Input.is_action_just_pressed("ui_accept") and is_on_floor():
-		velocity.y = JUMP_VELOCITY
-
-	# Get the input direction and handle the movement/deceleration.
-	# As good practice, you should replace UI actions with custom gameplay actions.
-	var direction = Input.get_axis("ui_left", "ui_right")
-	if direction:
-		velocity.x = direction * SPEED
-	else:
-		velocity.x = move_toward(velocity.x, 0, SPEED)
+	if current_move == 'walk':
+		velocity.x = cos(rotation - PI / 2) * WALK_SPEED
+		velocity.y = sin(rotation - PI / 2) * WALK_SPEED
 
 	move_and_slide()
 
