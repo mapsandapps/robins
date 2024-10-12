@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://dhxnijcuerbqq"]
+
+[ext_resource type="Texture2D" uid="uid://j77ypqdcia37" path="res://assets/tileGreen_17.png" id="1_45rhl"]
+
+[node name="Path" type="Line2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_45rhl")

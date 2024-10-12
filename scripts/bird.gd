@@ -1,8 +1,6 @@
 extends CharacterBody2D
 
-# TODO: remove these
-const SPEED = 0
-const JUMP_VELOCITY = 0
+@export var path_scene: PackedScene
 
 # turn
 const MIN_ROTATION = 0.1 # radians
@@ -21,6 +19,8 @@ var current_move: String = ''
 var remaining_move_duration = 0 # seconds
 var turn_direction = 1 # 1 or -1
 
+var path
+
 func get_is_moving():
 	return remaining_move_duration > 0
 
@@ -29,6 +29,20 @@ func on_move_ended():
 	current_move = ''
 	velocity.x = 0
 	velocity.y = 0
+	if is_instance_valid(path):
+		path.queue_free()
+
+# FIXME: currently moving along with robin (among other problems)
+func spawn_path(startPos: Vector2, startRotation: float, distance: float):
+	path = path_scene.instantiate()
+	path.width = 60
+	path.add_point(startPos)
+
+	var end_point = Vector2(startPos.x + cos(startRotation - PI / 2) * distance, startPos.y + sin(startRotation - PI / 2) * distance)
+
+	path.add_point(end_point)
+
+	add_child(path)
 
 # any of the possible bird movements
 func move():
@@ -70,6 +84,8 @@ func begin_walk():
 	remaining_move_duration = walk_distance / WALK_SPEED
 
 	print("bird will walk ", walk_distance, " units of distance")
+
+	spawn_path(position, rotation, walk_distance)
 
 func _physics_process(delta):
 	if remaining_move_duration <= 0:
